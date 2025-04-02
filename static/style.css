@@ -117,3 +117,26 @@ body {
     justify-content: center;
     align-items: center;
 }
+
+.header {
+    height: 80px;
+    background-color: whitesmoke;
+    border-radius: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+    width: 1000px;
+    margin-bottom: 5px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.create_btn {
+    height: 30px;
+    width: auto;
+    background-color: gold;
+    padding: 5px;
+    text-decoration: none;
+    font-size: 20px;
+    border-radius: 5px;
+}
