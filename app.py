@@ -11,6 +11,7 @@ from database import Database
 
 
 app = Flask(__name__)
+Database.create_article_table()
 
 # Создаем по умолчанию папку 'uploads/' для загрузки картинок
 app.config['UPLOAD_FOLDER'] = 'uploads/'
@@ -57,7 +58,14 @@ def create_article():
 @app.route("/")
 @app.route("/index")
 def index():
-    return render_template("index.html", articles=Database.get_all_articles())
+    articles = Database.get_all_articles()
+
+    count_in_group = 4
+    groups = []
+    for i in range(0, len(articles), count_in_group): # 0, 4, 8, 12, ...
+        groups.append(articles[i:i+count_in_group]) # [0:4], [4:8], [8:12], ...
+
+    return render_template("index.html", groups=groups)
 
 
 @app.route('/uploads/<filename>')

@@ -26,27 +26,44 @@ class Database:
         """)
 
     @staticmethod
-    def save(article: Article):
+    def save(article: Article) -> bool:
+        if Database.find_article_by_title(article.title) is not None:
+            return False
+
         Database.execute(f"""
         INSERT INTO articles (title, content, filename) VALUES (?, ?, ?)
         """, (article.title, article.content, article.image))
+        return True
 
     @staticmethod
-    def fetchall(sql_code: str):
+    def fetchall(sql_code: str, params: tuple = ()):
         conn = sqlite3.connect(Database.db_path)
         
         cursor = conn.cursor()
-        cursor.execute(sql_code)
+        cursor.execute(sql_code, params)
 
         return cursor.fetchall()
 
     @staticmethod
     def get_all_articles():
-        articles = Database.fetchall("SELECT * FROM articles")
+        articles = []
+
+        for (id, title, content, image) in Database.fetchall(
+                "SELECT * FROM articles"):
+            articles.append(Article(title, content, image, id))
+
+        return articles
             
     @staticmethod
     def find_article_by_title(title: str):
-        ...
+        articles = Database.fetchall(
+            "SELECT * FROM articles WHERE title = ?", [title])
+        
+        if not articles:
+            return None
+        
+        id, title, content, image = articles[0]
+        return Article(title, content, image, id)
 
 
 class SimpleDatabase:
